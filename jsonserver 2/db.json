@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "name": "张三",
+      "phone": "18976757797",
+      "email": "123@qq.com",
+      "education": "本科",
+      "graduationschool": "南京大学",
+      "job": "程序云 ",
+      "profile": "你说",
+      "id": 1
+    }
+  ],
+  "companys": [
+    {
+      "id": 1,
+      "name": "Apple",
+      "descript": "Apple is good!"
+    },
+    {
+      "id": 2,
+      "name": "Microft",
+      "descript": "Microft is good!"
+    },
+    {
+      "id": 3,
+      "name": "Huawei",
+      "descript": "Huawei is good!"
+    }
+  ]
+}

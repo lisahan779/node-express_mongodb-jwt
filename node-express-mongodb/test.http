@@ -1,0 +1,52 @@
+@url=http://localhost:3001
+
+
+### 测试
+
+get {{url}}/test
+
+
+
+@json = Content-Type: application/json
+### 所有用户
+get {{url}}/api/user
+
+### 注册
+post {{url}}/api/register
+{{json}}
+
+
+{
+    "username":"user4c",
+    "password":"123456f"
+}
+
+### 登录
+post {{url}}/aip/login
+Content-Type: application/json
+
+{
+    "username":"user4c",
+    "password":"123456f"
+}
+
+### 个人信息
+get {{url}}/aip/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzIyYTJlNzVkMWI5MThkYzlhMjJkNCIsImlhdCI6MTU3MzAyMDU1NH0.T5hNsmZ0UxcesvbgAzjLvnGgWY0zDpFEI5EFWXDmqmM
+
+### 查找单条信息
+get {{url}}/getusers/5e6b4feffa2575117daad449s
+
+### put 修改产品
+PUT {{url}}/getusers/update/5e6b4feffa2575117daad449
+Content-Type: application/json
+{
+  "name": "小小 ",
+  "email":"23@qq.com",
+  "job":"作家"
+}
+### 删除某个产品
+DELETE {{url}}/deleteusers/5e6b4feffa2575117daad449
+
+### 静态文件托管
+get {{url}}/index.html
