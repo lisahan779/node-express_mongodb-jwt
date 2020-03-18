@@ -1,13 +1,12 @@
 /* jshint esversion: 8 */ 
 // 引入数据库模型
-const {User,Customer} = require('./models')
+const {User,Customer,Img,Imgupload} = require('./models')
 const express = require('express');
 // 安装 jsonwebtoken依赖包 并引入
 const jwt = require('jsonwebtoken')
 const app = express();
-app.set('views', './views'); // 添加视图路径
-app.engine('html', require('ejs').renderFile); // 将EJS模板映射至".html"文件
-app.set('view engine', 'html'); // 设置视图引擎
+
+// 跨域访问
 const bodyParser = require('body-parser');
 // SECRET定义的是一个秘钥
 const SECRET = 'ewgfvwergvwsgw5454gsrgvsvsd'
@@ -18,6 +17,8 @@ app.use(bodyParser.urlencoded({
   limit: '1mb',
   extended: false
 }));
+
+// 跨域访问
 // const cors = require ("cors");
 // app.use(cors());
     app.all('*', function (req, res, next) {
@@ -101,20 +102,24 @@ app.post('/api/users', async function(req, res){
     const customer = await Customer.create(data)
     res.send(customer)
   })
-// 查询产品信息
+
+// 查询所有产品信息
   app.get('/users', async function(req, res){
     const data = await Customer.find().sort({ _id: -1 })
     res.send(data)
   })
- // 根据title名称查询指定的产品信息
+
+ // 根据id名称查询指定的产品信息
 app.get('/getusers/:id', async function(req,res){
     const data= await Customer.findById(req.params.id)
     res.send(data)
   })
-  
-  // 修改产品和PUT请求
-  // patch表示部分修改，put表示覆盖
-  //app.patch();
+
+  /*
+  根据id修改信息
+  patch表示部分修改，put表示覆盖
+  app.patch();
+  */
   app.put('/getusers/update/:id', async function(req,res){
     const product = await Customer.findById(req.params.id);
     // 将客户端传过来的title赋值给产品(赋值不需要异步，因为它只是javascript中的一个内存操作，而查询、保存数据都需要和MongoDB连接需要异步)
@@ -125,11 +130,12 @@ app.get('/getusers/:id', async function(req,res){
     product.graduationschool = req.body.graduationschool;
     product.job = req.body.job;
     product.profile = req.body.profile;
-  
     // 保存产品
     await product.save();
     res.send(product);
   })
+
+
   // 根据客户端传递的id号删除某个产品
   app.delete('/deleteusers/:id', async function(req, res){
     // 根据客户端传递过来的id从MongoDB数据库中查询对应的产品
@@ -141,7 +147,43 @@ app.get('/getusers/:id', async function(req,res){
       success: true,
     })
   })
+  // 加入图片
+  app.post("/uploads/transfer",async function(req, res){
+    console.log(111, req.body)
+    
+    const data={
+      "filename" : req.body.filename,
+      "filesize" :req.body.filesize,
+      "base64" : req.body.base64
+    }
+    console.log(data)
+    const imgupload = await Imgupload.create(data)
+    res.send(imgupload)
+  }),
   
+  app.delete('/delfile/:id', async function(req, res){
+    // 根据客户端传递过来的id从MongoDB数据库中查询对应的产品
+    const data = await Img.findById(req.params.id);
+    // 删除查询到的产品
+      await data.remove();
+    // 向客户端发送删除成功的信息
+    res.send({
+      success: true,
+    })
+  })
+  app.post('/file/upload', async function(req, res){
+    // 获取客户端请求的json数据
+    const data = req.body
+    // 插入数据到产品表集合中
+    const imgupload = await Img.create(data)
+    res.send(imgupload)
+  })
+  app.get('/goodslist', async function(req, res){
+    const data = await Img.find().sort({ _id: -1 })
+    res.send(data)
+  })
+
+// 监听端口
 app.listen(3001,() =>{
     console.log('http://localhost:3001')
 })

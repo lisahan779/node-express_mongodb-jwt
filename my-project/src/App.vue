@@ -1,7 +1,15 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-03-11 15:38:57
+ * @LastEditTime: 2020-03-18 10:43:27
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /all/my-project/src/App.vue
+ -->
 <template>
   <div id="app">
    
-    <router-view></router-view> 
+    <router-view v-if="isRouterAlive"></router-view> 
   </div>
 
 </template>
@@ -11,8 +19,25 @@
 
 export default {
   name: 'App',
-  components: {
-    // HelloWorld
+  provide (){
+     return {
+       reload:this.reload
+     }
+  },
+  data(){
+    return {
+       isRouterAlive:true
+    }
+  },
+  methods:{
+    reload (){
+       this.isRouterAlive = false
+       this.$nextTick(function(){
+          this.isRouterAlive = true
+       })
+    }
+  },
+  components:{
   }
 }
 </script>

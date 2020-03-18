@@ -1,11 +1,13 @@
 <template>
   <div class="customers container">
-    
     <h1 class="page-header">用户管理系统</h1>
-    <input type="text" class="form-control" placeholder="搜索" v-model="filterInput"/>
     <!-- v-if判断alter存在情况 -->
-    <Alert v-if="alter" :message="alter" :classs="classs" v-show="flage"></Alert>
-    <table class="table table-striped">
+    <Alert v-if="alter" @toparents="getmsg" :message="alter" :classs="classs" v-show="flage"></Alert>
+    <input type="text" class="form-control" placeholder="搜索" v-model="filterInput"/>
+    
+    <!-- 接收子组件的值 -->
+    <!-- <Alert  @toparents="getmsg" :message="alter" :classs="classs" v-show="flage"></Alert> -->
+    <table  class="table table-striped">
       <thead>
         <tr>
           <th>姓名</th>
@@ -32,6 +34,7 @@
         </tr>
       </tbody>
     </table>
+    
   </div>
 </template>
 
@@ -45,13 +48,19 @@ export default {
       alter: "",
       flage:true,
       classs: "alert alert-warning alert-dismissible",
-      filterInput:""
+      filterInput:"",
+      childrenmag:''
     };
   },
   components: {
     Alert
   },
   methods: {
+    // 接收子组件的值
+    getmsg(msg){ 
+      this.childrenmag=msg
+    },
+    // 点击跳转到详情
     handleclick(item){
       console.log(item);
       // this.bus.$emit("message",item)

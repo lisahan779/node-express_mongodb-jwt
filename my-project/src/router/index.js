@@ -9,6 +9,8 @@ const edit = () => import("../components/edit.vue")
 const login = () => import("../components/login.vue")
 const register = () => import("../components/register.vue")
 const user = () => import("../views/user.vue")
+const imgupload = () => import("../components/imgupload.vue")
+const alter = () => import("../components/alter.vue")
 const router = new VueRouter({
   mode: 'history',
   routes: [{
@@ -26,6 +28,10 @@ const router = new VueRouter({
       }]
     },
     {
+      path:'/alter',
+      component:alter
+    },
+    {
       path: "/login",
       name: "login",
       component: login,
@@ -36,6 +42,11 @@ const router = new VueRouter({
       path: '/',
       redirect: "/login",
     },
+    {
+      path:"/imgupload",
+      component:imgupload
+    },
+    
     {
       path: "/register",
       name: "register",

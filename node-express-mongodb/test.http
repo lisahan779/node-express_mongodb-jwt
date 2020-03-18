@@ -1,11 +1,9 @@
 @url=http://localhost:3001
 
-
+# 注意headder与body之间要有空行
 ### 测试
 
 get {{url}}/test
-
-
 
 @json = Content-Type: application/json
 ### 所有用户
@@ -15,10 +13,9 @@ get {{url}}/api/user
 post {{url}}/api/register
 {{json}}
 
-
 {
-    "username":"user4c",
-    "password":"123456f"
+    "username":"use",
+    "password":"12346f"
 }
 
 ### 登录
@@ -38,8 +35,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzIyYTJlN
 get {{url}}/getusers/5e6b4feffa2575117daad449s
 
 ### put 修改产品
-PUT {{url}}/getusers/update/5e6b4feffa2575117daad449
+PUT {{url}}/getusers/update/5e70c336ea81760885655e46
 Content-Type: application/json
+
 {
   "name": "小小 ",
   "email":"23@qq.com",
@@ -49,4 +47,26 @@ Content-Type: application/json
 DELETE {{url}}/deleteusers/5e6b4feffa2575117daad449
 
 ### 静态文件托管
-get {{url}}/index.html
+get {{url}}/goodslist
+
+### 添加图片
+POST {{url}}/uploads/transfer
+{{json}}
+
+{
+  "filename": "req.body.filename",
+    "filesize": "req.body.filesize",
+   "base64": "req.body.base64"
+}
+
+
+### 增减产品信息
+POST {{url}}/file/upload
+{{json}}
+
+    {
+      "price":96,
+      "num":15,
+      "title":"李子",
+      "checked":false,
+    }

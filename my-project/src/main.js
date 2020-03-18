@@ -7,7 +7,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/basic.css' 
 // 事件总线
-Vue.prototype.bus=new Vue()
+// const bus=new Vue()
 // 正则验证封装引入
 import formValidation from "../src/config/formValidation"  //导入js所在文件夹
 Vue.prototype.formValidation=formValidation; //挂载到原型上

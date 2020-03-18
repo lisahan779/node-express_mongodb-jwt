@@ -15,6 +15,7 @@
           <ul class="nav navbar-nav">
             <li><router-link to="/customers">主页</router-link></li>
             <li><router-link to="/about">关于我们</router-link></li>
+             <li><router-link to="/imgupload">图像上传</router-link></li>
           </ul>
           <ul class="nav navbar-nav nav-right">
             <li><router-link to="/add">添加用户</router-link></li>
