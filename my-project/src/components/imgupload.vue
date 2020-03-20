@@ -1,7 +1,7 @@
 <template>
   <div class="power">
     <input @change="uploadPhoto($event)" type="file" class="kyc-passin" />
-    <img :src="base64" alt />
+    <img v-if="flage" :src="base64" alt="上传图片"  style="width:400px;height:400px "/>
     <!-- // 这种可以打开相机或文件，"jpg,png,gif"这种打开只能上传特定文件且没有相机 -->
   </div>
 </template>
@@ -13,6 +13,7 @@ export default {
       formInline:{
         img:''
       },
+      flage:false,
       base64:''
       }
   },
@@ -42,6 +43,7 @@ export default {
           }).then(res=>{
             this.base64=res.data.base64
         console.log(res.data)
+        this.flage=true;
         console.log("图片上传成功！");
       })
       }

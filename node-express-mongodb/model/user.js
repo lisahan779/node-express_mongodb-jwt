@@ -3,19 +3,7 @@
  * 注册用户表
  * @FilePath: /all/node-express-mongodb/model/user.js
  */
-
-const mongoose = require('mongoose')
-// 链接数据库
-mongoose.connect('mongodb://localhost:27018/demo', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-}, function (erro, success) {
-    if (erro) {
-        console.log("数据库连接失败")
-    } else {
-        console.log("数据库连接成功")
-    }
-})
+const mongoose=require("./almodel")
 // 创建用户Schema
 const UserSchema = new mongoose.Schema({
     username: {

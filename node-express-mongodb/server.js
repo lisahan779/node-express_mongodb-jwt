@@ -1,6 +1,6 @@
 /* jshint esversion: 8 */ 
 // 引入数据库模型
-const {User,Customer,Img,Imgupload} = require('./models')
+const {User,Customer,Imgupload,Goods} = require('./models')
 const express = require('express');
 // 安装 jsonwebtoken依赖包 并引入
 const jwt = require('jsonwebtoken')
@@ -21,7 +21,8 @@ app.use(bodyParser.urlencoded({
 // 跨域访问
 // const cors = require ("cors");
 // app.use(cors());
-    app.all('*', function (req, res, next) {
+
+app.all('*', function (req, res, next) {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', '*');
         res.header('Access-Control-Allow-Methods', '*');
@@ -36,13 +37,11 @@ app.get('/api/test',async(req,res) =>{
       result:'ok'
     })
 })
-
 app.get('/api/user',async(req,res) =>{
     //查询所有用户
     const users = await User.find()
     res.send(users)
 })
-
 // 注册
 app.post('/api/register',async(req,res) =>{
     const user = await User.create({
@@ -94,7 +93,10 @@ const auth = async(req,res) =>{
 app.get('/api/profile',auth,async(req,res) =>{
     res.send(req.user)
 })
-// 新增产品
+
+
+
+// 新增用户
 app.post('/api/users', async function(req, res){
     // 获取客户端请求的json数据
     const data = req.body;
@@ -102,19 +104,16 @@ app.post('/api/users', async function(req, res){
     const customer = await Customer.create(data)
     res.send(customer)
   })
-
-// 查询所有产品信息
+// 查询所有用户信息
   app.get('/users', async function(req, res){
     const data = await Customer.find().sort({ _id: -1 })
     res.send(data)
   })
-
- // 根据id名称查询指定的产品信息
+ // 根据id名称查询指定的用户信息
 app.get('/getusers/:id', async function(req,res){
     const data= await Customer.findById(req.params.id)
     res.send(data)
   })
-
   /*
   根据id修改信息
   patch表示部分修改，put表示覆盖
@@ -122,7 +121,7 @@ app.get('/getusers/:id', async function(req,res){
   */
   app.put('/getusers/update/:id', async function(req,res){
     const product = await Customer.findById(req.params.id);
-    // 将客户端传过来的title赋值给产品(赋值不需要异步，因为它只是javascript中的一个内存操作，而查询、保存数据都需要和MongoDB连接需要异步)
+    // 将客户端传过来的title赋值给用户(赋值不需要异步，因为它只是javascript中的一个内存操作，而查询、保存数据都需要和MongoDB连接需要异步)
     product.name = req.body.name;
     product.phone = req.body.phone;
     product.email = req.body.email;
@@ -134,9 +133,7 @@ app.get('/getusers/:id', async function(req,res){
     await product.save();
     res.send(product);
   })
-
-
-  // 根据客户端传递的id号删除某个产品
+  // 根据客户端传递的id号删除某个用户
   app.delete('/deleteusers/:id', async function(req, res){
     // 根据客户端传递过来的id从MongoDB数据库中查询对应的产品
     const customer = await Customer.findById(req.params.id);
@@ -147,7 +144,9 @@ app.get('/getusers/:id', async function(req,res){
       success: true,
     })
   })
-  // 加入图片
+
+
+  // 上传图片
   app.post("/uploads/transfer",async function(req, res){
     console.log(111, req.body)
     
@@ -160,10 +159,19 @@ app.get('/getusers/:id', async function(req,res){
     const imgupload = await Imgupload.create(data)
     res.send(imgupload)
   }),
-  
-  app.delete('/delfile/:id', async function(req, res){
+
+
+  app.post('/cart/upload', async function(req, res){
+    // 获取客户端请求的json数据
+    const data = req.body
+    // 插入数据到产品表集合中
+    const imgupload = await Goods.create(data)
+    res.send(imgupload)
+  })
+  // 删除商品
+  app.delete('/cartDel/:id', async function(req, res){
     // 根据客户端传递过来的id从MongoDB数据库中查询对应的产品
-    const data = await Img.findById(req.params.id);
+    const data = await Goods.findById(req.params.id);
     // 删除查询到的产品
       await data.remove();
     // 向客户端发送删除成功的信息
@@ -171,17 +179,40 @@ app.get('/getusers/:id', async function(req,res){
       success: true,
     })
   })
-  app.post('/file/upload', async function(req, res){
-    // 获取客户端请求的json数据
-    const data = req.body
-    // 插入数据到产品表集合中
-    const imgupload = await Img.create(data)
-    res.send(imgupload)
-  })
+
+  // 查看商品
   app.get('/goodslist', async function(req, res){
-    const data = await Img.find().sort({ _id: -1 })
+    const data = await Goods.find().sort({ _id: -1 })
     res.send(data)
   })
+// 修改商品
+app.post("/cartEdit",function(req,res){
+    // var userId = req.cookies.userId,
+        productId = req.body.productId,
+        productNum = req.body.productNum,
+        checked = req.body.checked;
+        Goods.updateMany({ // 查询条件
+        // "userId":userId,
+        "productId":productId
+    },{ // 修改的数据
+        "productNum":productNum,
+        "checked":checked
+    },function(err,doc){
+        if(err){
+          res.json({
+            status:'1',
+            msg:err.message,
+            result:''
+          });
+        }else{
+          res.json({
+            status:'0',
+            msg:'',
+            result:'suc'
+          });
+        }
+    });
+})
 
 // 监听端口
 app.listen(3001,() =>{

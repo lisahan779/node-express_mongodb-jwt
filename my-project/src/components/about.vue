@@ -12,19 +12,19 @@
       <router-link to="/customers">返回主页</router-link>
     </button>
     <button>获取数据</button>
-    <br>
-    
-    <h2>购物车</h2>
+    <br />
 
+    <h2>购物车</h2>
     <ul>
       <li v-for="(item,index) in this.list" :key="index">
         <div>
-          <input type="checkbox" v-model="item.checked" />
-          <span>{{item.title}}</span>
-          <button class="btn btn-default" @click="reduce(index)">-</button>
-          <span>{{item.num}}</span>
-          <button class="btn btn-default" @click="add(index)">+</button>
-          <span>价格：{{item.price}}</span>
+          <h3>{{item.productName}}</h3>
+          <input type="checkbox" v-model="item.checked" /> 
+          <span>{{item.produceName}}</span>
+          <button class="btn btn-default" @click="editCart('minu',item)">-</button>
+          <span>{{item.productNum}}</span>
+          <button class="btn btn-default" @click="editCart('add',item)">+</button>
+          <span>价格：{{item.salePrice}}</span>
           <button @click="del(index,item._id)" class="btn btn-default">删除</button>
         </div>
       </li>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "about",
   // 调用app.vue组件中的方法
@@ -42,11 +43,9 @@ export default {
   data() {
     return {
       list: [],
-
       allcheck: false
     };
   },
-
   methods: {
     async getproduct() {
       const res = await this.$http.get("/goodslist");
@@ -54,26 +53,41 @@ export default {
       localStorage.setItem("shoppingcart", JSON.stringify(this.list));
       console.log(this.list);
     },
-    add(i) {
-      this.list[i].num++;
-    },
-    reduce(i) {
-      if (this.list[i].num <= 1) {
-        this.list[i].num = 0;
-        return;
+    editCart(flag,item) {
+      if (flag == "add") {
+        // 添加商品数量
+          item.productNum++;
+          console.log(Number(item.productNum) )
+      } else if ((flag =="minu")) {
+        // 减少商品数量
+        if (item.productNum <= 1) {
+          return;
+        }
+        item.productNum--;
+        // console.log(Number(item.productNum) )
+      } else {
+        // 商品控制选中
+        item.checked = item.checked == "1" ? "1" : "0";
       }
-      this.list[i].num--;
+      this.$http.post("/cartEdit", {
+          productId: item.productId,
+          productNum: item.productNum,
+          checked: item.checked
+        })
+        .then(response => {
+          let res = response.data;
+          console.log(res)
+        });
+        
     },
     checkall() {
-      //   console.log(this.allcheck);
       console.log(event.target.checked);
       this.list.forEach(item => {
         item.checked = event.target.checked;
-        // console.log(item._id)
       });
     },
     async del(i, id) {
-      const res = await this.$http.delete("/delfile/" + id);
+      const res = await this.$http.delete("/cartDel/"+id);
       console.log(res);
       this.reload();
     }
@@ -81,22 +95,34 @@ export default {
   computed: {
     totalMoney() {
       let allmoney = 0;
-      let isAllCheck = true;
+      // let isAllCheck = true;
       for (let i in this.list) {
         if (this.list[i].checked) {
-          allmoney += this.list[i].price * this.list[i].num;
+
+          allmoney += this.list[i].productNum * this.list[i].salePrice;
         } else {
-          isAllCheck = false;
+          // isAllCheck = false;
         }
       }
-      this.allcheck == isAllCheck;
+      // this.allcheck == isAllCheck;
       return allmoney;
-    }
+    },
+    ...mapGetters({
+      // 调用getters拿数据,拿到的是express中的data
+      cartinfo: "GETCART"
+    })
   },
   created() {
-    this.getproduct();
+    // this._initPageData()
+    // 发送存数据指令调用actions里的方法，如果没哟这步，是获取不到数据的
+    // 'INITCART'是actions里的[INITCART]的实例
+    // store是main.js里定义的实例化的vuex
+    this.$store.dispatch("INITCART");
+    this.getproduct()
+    
+  },
   }
-};
+
 </script>
 
 <style>

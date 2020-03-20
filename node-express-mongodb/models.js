@@ -58,42 +58,52 @@ const Customersschema = new mongoose.Schema({
     id: Number
 
 })
-// 图片模型
-const Imgchema = new mongoose.Schema({
-    url: {
+// 商品
+var produtSchema = new mongoose.Schema({
+    productId: {
         type: String
     },
-    price: {
-        type: Number
-    },
-    title: {
+    productName: {
         type: String
     },
-    num: {
+    salePrice: {
         type: Number
     },
-    checked:{
-        type:Boolean
+    productImage: {
+        type: String
+    },
+    // 添加的属性
+    checked: {
+        type: Boolean
+    },
+    productNum: {
+        type: Number
     }
 })
-const Imguploadchema= new mongoose.Schema(
-    {
-        filename: String,
-        filesize: Number,
-        base64: String
+const Imguploadchema = new mongoose.Schema({
+    filename: {
+        type: String
+    },
+    filesize: {
+        type: Number
+    },
+    base64: {
+        type: String
     }
-)
+})
+
 // 定义user表
 const User = mongoose.model('User', UserSchema)
 // 产品Customers表
 const Customer = mongoose.model('Customers', Customersschema)
 // 全部删除
 // User.db.dropCollection('users')
-const Img = mongoose.model('Img', Imgchema)
-const Imgupload=mongoose.model('Imgupload', Imguploadchema)
+
+const Imgupload = mongoose.model('Imgupload', Imguploadchema)
+const Goods = mongoose.model('good', produtSchema);
 module.exports = {
     User,
     Customer,
-    Img,
+    Goods,
     Imgupload
 }

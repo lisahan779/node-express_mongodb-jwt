@@ -3,21 +3,9 @@
  * 用户信息表
  * @FilePath: /all/node-express-mongodb/model/customers.js
  */
-
-const mongoose = require('mongoose')
-// 链接数据库
-mongoose.connect('mongodb://localhost:27018/demo', {
-    useCreateIndex: true,
-    useNewUrlParser: true
-}, function (erro, success) {
-    if (erro) {
-        console.log("数据库连接失败")
-    } else {
-        console.log("数据库连接成功")
-    }
-})
+const {mongodb} = require("./almodel")
 // / 创建用户信息Schema
-const Customersschema = new mongoose.Schema({
+const Customersschema = new mongodb.Schema({
     name: {
         type: String
     },
@@ -42,9 +30,18 @@ const Customersschema = new mongoose.Schema({
     id: Number
 
 })
+const Imguploadchema = new mongoose.Schema({
+    filename: {
+        type: String
+    },
+    filesize: {
+        type: Number
+    },
+    base64: {
+        type: String
+    }
+})
+const Customer = mongodb.model('Customers', Customersschema)
+const Imgupload = mongodb.model('Imgupload', Imguploadchema)
 
-// 产品Customers表
-const Customer = mongoose.model('Customers', Customersschema)
-
-module.exports = {Customer}
-
+module.exports = {Customer,Imgupload}

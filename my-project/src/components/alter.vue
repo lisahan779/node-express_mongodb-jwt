@@ -4,7 +4,7 @@
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>{{message}}</strong> 
   <!-- 向父组件发送信息 -->
-  <button @click="toparents">传值给父组件</button>
+  <!-- <button @click="toparents">传值给父组件</button> -->
 </div>
 
   </div>

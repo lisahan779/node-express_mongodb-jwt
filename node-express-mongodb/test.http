@@ -34,6 +34,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzIyYTJlN
 ### 查找单条信息
 get {{url}}/getusers/5e6b4feffa2575117daad449s
 
+###查看商品
+
+GET {{url}}/goodslist
+
 ### put 修改产品
 PUT {{url}}/getusers/update/5e70c336ea81760885655e46
 Content-Type: application/json
@@ -43,6 +47,13 @@ Content-Type: application/json
   "email":"23@qq.com",
   "job":"作家"
 }
+
+###
+
+POST {{url}}/cartEdit
+{{json}}
+
+
 ### 删除某个产品
 DELETE {{url}}/deleteusers/5e6b4feffa2575117daad449
 
