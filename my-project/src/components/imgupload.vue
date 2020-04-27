@@ -35,16 +35,16 @@ export default {
         var imgcode = e.target.result;
         // let that=this;
         this.formInline.img = imgcode;
-        console.log(111,imgcode);
+        // console.log(111,imgcode);
       this.$http.post('/uploads/transfer',{
             "filename": filename,
             "filesize": filesize,
             "base64": imgcode
           }).then(res=>{
             this.base64=res.data.base64
-        console.log(res.data)
+        // console.log(res.data)
         this.flage=true;
-        console.log("图片上传成功！");
+        // console.log("图片上传成功！");
       })
       }
     },

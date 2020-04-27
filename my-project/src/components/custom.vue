@@ -3,11 +3,11 @@
     <h1 class="page-header">用户管理系统</h1>
     <!-- v-if判断alter存在情况 -->
     <Alert v-if="alter" @toparents="getmsg" :message="alter" :classs="classs" v-show="flage"></Alert>
-    <input type="text" class="form-control" placeholder="搜索" v-model="filterInput"/>
-    
+    <input type="text" class="form-control" placeholder="搜索" v-model="filterInput" />
+
     <!-- 接收子组件的值 -->
     <!-- <Alert  @toparents="getmsg" :message="alter" :classs="classs" v-show="flage"></Alert> -->
-    <table  class="table table-striped">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th>姓名</th>
@@ -29,69 +29,74 @@
           <td>
             <!-- <router-link class="btn btn-default" :to="'/customer/'+item[index]._id" style="backgroundcolor:blue ">查看详情</router-link> -->
             <!-- <router-link class="btn btn-default" :to="'/customer/'+item._id" style="backgroundcolor:blue " >查看详情</router-link> -->
-            <div class="btn btn-default" style="backgroundcolor:blue" @click="handleclick(item)">查看详情</div>
+            <div
+              class="btn btn-default"
+              style="backgroundcolor:blue"
+              @click="handleclick(item)"
+            >查看详情</div>
           </td>
         </tr>
       </tbody>
     </table>
-    
+   <Page @page="getpage" class="PPage"></Page>
   </div>
 </template>
 
 <script>
 import Alert from "./alter";
+import Page from './page'
 export default {
   name: "customers",
   data() {
     return {
       customer: [],
       alter: "",
-      flage:true,
+      flage: true,
       classs: "alert alert-warning alert-dismissible",
-      filterInput:"",
-      childrenmag:''
+      filterInput: "",
+      childrenmag: "",
+      page:1
     };
   },
   components: {
-    Alert
+    Alert,
+    Page
   },
   methods: {
     // 接收子组件的值
-    getmsg(msg){ 
-      this.childrenmag=msg
+    getmsg(msg) {
+      this.childrenmag = msg;
+    },
+    // 接收子组件的传值
+    getpage(msg){
+      this.page = msg
+     this.fetchCustomers()
     },
     // 点击跳转到详情
-    handleclick(item){
-      console.log(item);
-      // this.bus.$emit("message",item)
+    handleclick(item) {
       this.$router.push({
-        path: '/customer/',
+        path: "/customer/",
         query: {
           id: item._id
-        },
-
-      })
+        }
+      });
     },
     // 异步请求数据
     async fetchCustomers() {
-      const res = await this.$http.get("/users");
-      this.customer = res.data;
-      // console.log("333",this.customer)
+      const res = await this.$http.post("/users", {
+        page: this.page,
+        rows: 2
+      });
+      this.customer = res.data.rows;
     },
-    // fetchCustomers() {
-    // this.$http.get("users").then((res)=>{
-    //   this.customers=res.data
-    // })Z
-    // }
     // 搜索
-    
-    filterBy(customers,inputvalue){
+    filterBy(customers, inputvalue) {
       // filter方法遍历整个数组
-   return customers.filter((customer)=>{
-    //  match()将遍历的所有数据与搜索输入的数据比对后返回
-// 注意match不能遍里数字，true,false
-    return customer.name.match(inputvalue)
-   })
+      return customers.filter(customer => {
+        //  match()将遍历的所有数据与搜索输入的数据比对后返回
+        // 注意match不能遍里数字，true,false
+        return customer.name.match(inputvalue);
+      });
     }
   },
 
@@ -100,16 +105,11 @@ export default {
     if (this.$route.query.alter || this.$route.query.classs) {
       (this.alter = this.$route.query.alter),
         (this.classs = this.$route.query.classs);
-      // this.fetchCustomers()
     }
     this.fetchCustomers();
-    console.log("customers页面")
   }
-  // updated(){this.fetchCustomers()}
-}
-
+};
 </script>
 
 <style>
-
 </style>

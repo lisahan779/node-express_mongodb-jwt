@@ -26,11 +26,11 @@ console.log('#2 actions: data')
 commit('INIT', data)
 }
 },
-// // 拿数据把他绑定到需要的组件中
-// getters: {
-// // { cartInfo }这种写法是解构赋值,相当于state.cartInfo获取state里的cartInfo
-// 'GETCART': ({ cartInfo }) => {
-// return cartInfo
-// }
-// }
+// 拿数据把他绑定到需要的组件中
+getters: {
+// { cartInfo }这种写法是解构赋值,相当于state.cartInfo获取state里的cartInfo
+'GETCART': ({ cartInfo }) => {
+return cartInfo
+}
+}
 }

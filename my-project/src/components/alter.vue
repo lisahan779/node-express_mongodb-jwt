@@ -23,7 +23,7 @@ data(){
 methods:{
   toparents(){
     this.$emit("toparents",this.type)
-    console.log(this.type)
+    // console.log(this.type)
   }
 }
 

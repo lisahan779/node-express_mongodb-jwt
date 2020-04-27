@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true, //字段是否唯一
         set(val) {
+            // 对密码进行散列
             // 通过bcryptjs对密码加密返回值 第一个值返回值， 第二个密码强度
             return require('bcryptjs').hashSync(val, 10)
         }

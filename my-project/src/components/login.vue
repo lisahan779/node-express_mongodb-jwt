@@ -52,7 +52,7 @@ export default {
         } else if (res.data.message == "密码无效") {
           this.$message.success("密码错误");
         } else if(res.data.token){
-          console.log(res.data.token)
+          // console.log(res.data.token)
             const token = window.sessionStorage;
             token.setItem("token", res.data.token);
             token.setItem("name",res.data.user.username)

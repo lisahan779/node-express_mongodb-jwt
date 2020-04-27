@@ -19,7 +19,7 @@
       <li v-for="(item,index) in this.list" :key="index">
         <div>
           <h3>{{item.productName}}</h3>
-          <input type="checkbox" v-model="item.checked" /> 
+          <input type="checkbox" v-model="item.checked"  @change="_checkAll"/> 
           <span>{{item.produceName}}</span>
           <button class="btn btn-default" @click="editCart('minu',item)">-</button>
           <span>{{item.productNum}}</span>
@@ -29,7 +29,7 @@
         </div>
       </li>
     </ul>
-    <input type="checkbox" v-model="allcheck" @click="checkall" />
+    <input type="checkbox"  id="allCheckBox" v-model="allcheck" @click="checkall" > 
     <button>合计:{{totalMoney}}</button>
   </div>
 </template>
@@ -46,6 +46,27 @@ export default {
       allcheck: false
     };
   },
+  // 总价的实时监听
+  computed: {
+    totalMoney() {
+      let allmoney = 0;
+      let isAllCheck = true;
+      for (let i in this.list) {
+        if (this.list[i].checked) {
+          allmoney += this.list[i].productNum * this.list[i].salePrice;
+        } else {
+          isAllCheck = false;
+        }
+      }
+      this.allcheck == isAllCheck;
+      return allmoney;
+    },
+    // 从store来
+    ...mapGetters({
+      // 调用getters拿数据,拿到的是express中的data
+      cartinfo: "GETCART"
+    })
+  },
   methods: {
     async getproduct() {
       const res = await this.$http.get("/goodslist");
@@ -53,6 +74,7 @@ export default {
       localStorage.setItem("shoppingcart", JSON.stringify(this.list));
       console.log(this.list);
     },
+    // 数量
     editCart(flag,item) {
       if (flag == "add") {
         // 添加商品数量
@@ -80,38 +102,33 @@ export default {
         });
         
     },
+    // 全选
     checkall() {
       console.log(event.target.checked);
       this.list.forEach(item => {
         item.checked = event.target.checked;
       });
     },
+    // 反选
+ _checkAll() {
+            // val.goodsList.forEach(item => {
+            //     item.checked = val.checked;
+            // });
+            if (this.list.every(item => item.checked)) {
+                this.allcheck = true;
+            } else {
+                this.allcheck = false;
+            }
+
+        },
+
     async del(i, id) {
       const res = await this.$http.delete("/cartDel/"+id);
       console.log(res);
       this.reload();
     }
   },
-  computed: {
-    totalMoney() {
-      let allmoney = 0;
-      // let isAllCheck = true;
-      for (let i in this.list) {
-        if (this.list[i].checked) {
-
-          allmoney += this.list[i].productNum * this.list[i].salePrice;
-        } else {
-          // isAllCheck = false;
-        }
-      }
-      // this.allcheck == isAllCheck;
-      return allmoney;
-    },
-    ...mapGetters({
-      // 调用getters拿数据,拿到的是express中的data
-      cartinfo: "GETCART"
-    })
-  },
+  
   created() {
     // this._initPageData()
     // 发送存数据指令调用actions里的方法，如果没哟这步，是获取不到数据的

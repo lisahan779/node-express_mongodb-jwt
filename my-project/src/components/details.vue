@@ -52,8 +52,8 @@ export default {
       let id=this.$route.query.id
       this.$http.get("getusers/"+id).then(res => {
         this.customers = res.data;
-        console.log(id)
-        console.log(this.customers)
+        // console.log(id)
+        // console.log(this.customers)
       });
     },
     //  删除对应id的数据
@@ -76,13 +76,7 @@ export default {
     // 拿到id 请求地址栏数据用route,发送用router
     this.fetchCustomers();
     console.log(this.$route.query.id);
-  },
-  // mounted(){
-  //   this.fetchCustomers(this.$route.query.id);
-  //   console.log("详情页面");
-  //   console.log(21,this.$route.query.id)
-  //   console.log(111,window.location.href.split('/')[4])
-  // }
+  }
 };
 </script>
 

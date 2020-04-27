@@ -90,7 +90,7 @@ router.post("/cartEdit",function(req,res){
 router.post('/cartDel',function(req,res,next){
     var userId = req.cookies.userId,productId = req.body.productId;
     Goods.update({
-        userId:userId
+        // userId:userId
     },{
         $pull:{
             'cartList':{

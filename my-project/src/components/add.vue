@@ -111,7 +111,8 @@ export default {
               this.$http
                 .post("/api/users", newCustomers)
                 .then(res => {
-                  console.log(res);
+                  if(res){
+                  // console.log(res);
                   // query 将地址栏的信息传给alter组件展示
                   this.$router.push({
                     name: "customers",
@@ -120,6 +121,7 @@ export default {
                       classs: "alert alert-success alert-dismissible"
                     }
                   });
+                  }
                 });
             }
           }

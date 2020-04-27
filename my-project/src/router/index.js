@@ -11,7 +11,7 @@ const register = () => import("../components/register.vue")
 const user = () => import("../views/user.vue")
 const imgupload = () => import("../components/imgupload.vue")
 const alter = () => import("../components/alter.vue")
-const addshopping = () => import("../components/addshopping.vue")
+// const addshopping = () => import("../components/addshopping.vue")
 const hello = () => import("../components/HelloWorld.vue")
 const router = new VueRouter({
   mode: 'history',
@@ -28,9 +28,6 @@ const router = new VueRouter({
         component: customers,
         // meta:{needLogin: true}
       }]
-    },{
-     path:'/addshopping',
-     component:addshopping
     },{
       path:"/hello",
       component:hello

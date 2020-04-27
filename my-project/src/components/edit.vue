@@ -71,7 +71,7 @@ export default {
     fetchcustomers(id) {
       this.$http.get("/getusers/" + id).then(res => {
         this.customers = res.data;
-        console.log(res.data);
+        // console.log(res.data);
       });
     },
     // 更新数据
