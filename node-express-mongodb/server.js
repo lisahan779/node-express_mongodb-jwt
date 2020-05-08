@@ -1,6 +1,6 @@
 /* jshint esversion: 8 */
 // 引入数据库模型
-const {
+var {
   User,
   Customer,
   Imgupload,
@@ -28,7 +28,6 @@ app.use(bodyParser.urlencoded({
 // 跨域访问
 // const cors = require ("cors");
 // app.use(cors());
-
 app.all('*', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
@@ -51,11 +50,25 @@ app.get('/api/user', async (req, res) => {
 })
 // 注册
 app.post('/api/register', async (req, res) => {
-  const user = await User.create({
+  const data = {
     username: req.body.username,
-    password: req.body.password
+    password: req.body.password,
+    userId: req.body.userId,
+  }
+  const users = await User.findOne({
+    username: req.body.username
   })
-  res.send(user)
+  if (users) {
+    return res.status(400).send({
+      message: "用户已存在"
+    })
+  } 
+    const user = await User.create(data)
+    res.json({
+      status:'200',
+      msg:"注册成功",
+      result:user
+    })
 })
 // 登录
 app.post('/api/login', async (req, res) => {
@@ -175,12 +188,9 @@ app.delete('/deleteusers/:id', async (req, res) => {
     success: true,
   })
 })
-
-
 // 上传图片
 app.post("/uploads/transfer", async (req, res) => {
     console.log(111, req.body)
-
     const data = {
       "filename": req.body.filename,
       "filesize": req.body.filesize,
@@ -190,15 +200,15 @@ app.post("/uploads/transfer", async (req, res) => {
     const imgupload = await Imgupload.create(data)
     res.send(imgupload)
   }),
-
-
+  // 增加商品
   app.post('/cart/upload', async (req, res) => {
     // 获取客户端请求的json数据
     const data = req.body
     // 插入数据到产品表集合中
-    const imgupload = await Goods.create(data)
-    res.send(imgupload)
+    const product = await Goods.create(data)
+    res.send(product)
   })
+
 // 删除商品
 app.delete('/cartDel/:id', async (req, res) => {
   // 根据客户端传递过来的id从MongoDB数据库中查询对应的产品
@@ -212,12 +222,44 @@ app.delete('/cartDel/:id', async (req, res) => {
 })
 
 // 查看商品
-app.get('/goodslist', async (req, res) => {
-  // 倒序排列，最新的显示在最前面
-  const data = await Goods.find().sort({
-    _id: -1
+// app.get('/goodslist', async (req, res) => {
+//   // 倒序排列，最新的显示在最前面
+//   const data = await Goods.find().sort({
+//     _id: -1
+//   })
+//   res.send(data)})
+
+// 条件查看商品
+app.get('/goodslist', function (req, res, next) {
+  // 分页
+  let page = parseInt(req.query.page);
+  let row = parseInt(req.query.row);
+  let skip = (page - 1) * row;
+  // 条件
+  let para = {}
+  let goodsmodel = Goods.find(para).skip(skip).limit(row);
+  // 按照价格排序
+  let sort = req.query.sort;
+  goodsmodel.sort({
+    'salePrice': sort
   })
-  res.send(data)
+  goodsmodel.exec({}, function (err, doc) {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message
+      })
+    } else {
+      res.json({
+        status: "1",
+        msg: '',
+        result: {
+          count: doc.length,
+          list: doc
+        }
+      })
+    }
+  })
 })
 // 修改商品
 app.post("/cartEdit", (req, res) => {
@@ -230,7 +272,7 @@ app.post("/cartEdit", (req, res) => {
     "productId": productId
   }, { // 修改的数据
     "productNum": productNum,
-    "checked": checked
+    // "checked": checked
   }, function (err, doc) {
     if (err) {
       res.json({
@@ -241,12 +283,69 @@ app.post("/cartEdit", (req, res) => {
     } else {
       res.json({
         status: '0',
-        msg: '',
-        result: 'suc'
+        msg: '修改成功',
+        result: {
+          list: doc
+        }
       });
     }
   });
 })
+
+// // 加入购物车
+// app.post('/goods/addcart',(req, res) => {
+//   // 先找到用户，先固定找一个么有判断数据是否存在
+//   var userId = "1009"
+//   var goodsid = req.body.productId
+//    User.findOne({
+//     userId: userId
+//   }, function (err, doc) {
+//     if (err) {
+//       res.json({
+//         status: "400",
+//         msg: error.message
+//       })
+//     } else {
+//       // 拿到用户后遍历数据，如果有数据++
+//       console.log("userdoc" + doc)
+//       if (doc) {
+//         Goods.findOne({
+//           productId: goodsid
+//         }, (err, producdoc) => {
+//           if (err) {
+//             res.json({
+//               status: "400",
+//               msg: err.message
+//             })
+//           } else {
+//             if (producdoc) {
+//               // 首先定义一个数量和选择状态
+//               // producdoc.productNum = 1,
+//               //   producdoc.checked = 1,
+//               doc = JSON.parse(JSON.stringify(doc));
+//               doc = new User(doc);
+//               users.cartLisr.push(producdoc);
+//               doc.save((err2,doc2)=>{
+//                   if (err2) {
+//                     res.json({
+//                       status: "400",
+//                       msg: err2.message
+//                     })
+//                   } else {
+//                     res.json({
+//                       status: "200",
+//                       msg: doc2,
+//                       result:"success"
+//                     })
+//                   }
+//                 })
+//             }
+//           }
+//         })
+//       }
+//     }
+//   })
+// })
 
 // 监听端口
 app.listen(3001, () => {

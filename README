@@ -7,7 +7,6 @@
 #### 3.后台express中的http文档可以直接通过写的路由发送请求，但前提是使用vscode,安装了restful client插件
 
 
-
 ## 说到vscode 一般使用必须安装的插件有
 
 #### 一 Auto Close Tag
@@ -45,3 +44,5 @@
 让 vscode 映射 chrome 的 debug功能，使静态页面都可以用 vscode 来打断点调试
 
 
+
+app文件中是express脚手架项目

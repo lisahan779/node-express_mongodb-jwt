@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### 个人信息
 get {{url}}/aip/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkYzIyYTJlNzVkMWI5MThkYzlhMjJkNCIsImlhdCI6MTU3MzAyMDU1NH0.T5hNsmZ0UxcesvbgAzjLvnGgWY0zDpFEI5EFWXDmqmM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYjM3YjliNTA4MzY4MTEyMDBmNzdhYSIsImlhdCI6MTU4ODgyMTU4M30.2iio09t2mHiEBocuNZWGxZneXcbmExmNbzyL_HOs7E0
 
 ### 查找单条信息
 get {{url}}/getusers/5e6b4feffa2575117daad449s

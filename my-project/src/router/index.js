@@ -13,6 +13,7 @@ const imgupload = () => import("../components/imgupload.vue")
 const alter = () => import("../components/alter.vue")
 // const addshopping = () => import("../components/addshopping.vue")
 const hello = () => import("../components/HelloWorld.vue")
+const child = () => import("../components/children.vue")
 const router = new VueRouter({
   mode: 'history',
   routes: [{
@@ -31,8 +32,11 @@ const router = new VueRouter({
     },{
       path:"/hello",
       component:hello
-    }
-    ,
+    },
+    {
+      path:"/child",
+      component:child
+    },
     {
       path:'/alter',
       component:alter

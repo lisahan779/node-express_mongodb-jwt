@@ -10,19 +10,22 @@ const mongoose = require('mongoose')
 // 链接数据库
 mongoose.connect('mongodb://localhost:27018/demo', {
     useCreateIndex: true,
+    useUnifiedTopology: true,
     useNewUrlParser: true
-}, function (erro, success) {
-    if (erro) {
-        console.log("数据库连接失败")
-    } else {
-        console.log("数据库连接成功")
-    }
 })
-// 创建用户Schema
+mongoose.connection.on("connected", function () {
+    console.log("MongoDB connected successful")
+})
+mongoose.connection.on("error", function () {
+    console.log("MongoDB connected fail")
+})
+mongoose.connection.on("disconnected", function () {
+    console.log("MongoDB disconnected")
+})
+// 创建用户Schema集合
 const UserSchema = new mongoose.Schema({
-    username: {
-        type: String,
-    },
+    userId: String,
+    username: String,
     password: {
         type: String,
         unique: true, //字段是否唯一
@@ -31,7 +34,18 @@ const UserSchema = new mongoose.Schema({
             // 通过bcryptjs对密码加密返回值 第一个值返回值， 第二个密码强度
             return require('bcryptjs').hashSync(val, 10)
         }
-    }
+    },
+    orderList: Array,
+    cartLisr: [{
+        productId: String,
+        productName: String,
+        salePrice: String,
+        productImage: String,
+        checked: Boolean,
+        productNum: String
+    }],
+    "addressList": Array
+
 })
 // 创建用户信息Schema
 const Customersschema = new mongoose.Schema({
